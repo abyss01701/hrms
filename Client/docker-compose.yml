@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:17
+    container_name: client-postgres-db
+    environment:
+      POSTGRES_USER: clientadmin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: client_hrms_db   
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./client-backend
+    env_file:
+      - ./client-backend/.env
+    environment:
+      DB_HOST: client-postgres-db   
+      DB_PORT: 5432
+      DB_USER: clientadmin          
+      DB_PASS: admin               
+      DB_NAME: client_hrms_db
+      JWT_ACCESS_SECRET: supersecretaccess
+      JWT_REFRESH_SECRET: supersecretrefresh    
+    ports:
+      - "3002:3002"
+    depends_on:
+      - db
+  
+  pgAdmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: client@client.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "4000:80"
+    depends_on:
+      - db
+
+volumes:
+  db_data:

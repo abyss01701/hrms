@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:17
+    container_name: postgres-db  
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: hrms-db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  
+  backend:
+    build: ./su-backend
+    env_file:
+      - ./su-backend/.env
+    environment:
+      DB_HOST: db
+      DB_USER: admin
+      DB_PASSWORD: admin
+      DB_NAME: hrms-db
+      
+      JWT_ACCESS_SECRET: supersecretaccess
+      JWT_REFRESH_SECRET: supersecretrefresh
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    
+  pgAdmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: akshat.newal@vodafone.com.fj
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "4050:80"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
