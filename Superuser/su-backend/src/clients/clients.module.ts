@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+import { HttpModule } from '@nestjs/axios';
 import { ClientsController } from './clients.controller';
 import { ClientsService } from './clients.service';
 import { Client } from './client.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Client])],
+  imports: [TypeOrmModule.forFeature([Client]), HttpModule],
   controllers: [ClientsController],
   providers: [ClientsService],
   exports: [ClientsService],

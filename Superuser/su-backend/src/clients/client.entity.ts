@@ -23,6 +23,9 @@ export class Client {
   @Column({ unique: true })
   domain: string;
 
+  @Column({nullable:true})
+  apiKey: string;
+
   @Column()
   employees: number;
 
